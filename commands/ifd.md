@@ -1,123 +1,64 @@
 ---
+name: ifd
 description: Generate implementation workflow from any issue tracker URL
 argument-hint: <issue-url-or-id>
-allowed-tools:
-  - AskUserQuestion
-  - Skill
-  - Read
-  - Grep
-  - Glob
 ---
 
 # Issue First Development
 
-Generate a structured implementation workflow from an issue tracker URL or ID.
+Generate a structured implementation workflow from an issue tracker URL.
 
-## Input Handling
+## RFC 2119 Keywords
 
-1. **If no argument provided**: You MUST use AskUserQuestion to get issue URL or ID:
-   - Header: "Issue"
-   - Question: "What issue would you like to work on?"
-   - Options: Allow free text input
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119.
 
-2. **If argument provided**: You MUST use the provided URL or ID directly
+## Process
 
-## Step 1: Fetch Issue Details
+### Step 1: Get Issue Details
 
-You MUST run `/issue-dev:issue-work <url-or-id>` to:
-- Detect provider (Linear, JIRA, or ask if unclear)
-- Fetch issue details (title, description, labels)
-- Move issue to In Progress state
+If no argument provided:
+1. You MUST use AskUserQuestion to ask: "What issue are you working on? (Paste URL or issue ID)"
 
-You MUST extract from the issue:
-- **ISSUE_ID**: The issue identifier (e.g., PROJ-123)
-- **ISSUE_URL**: Full URL to the issue
-- **ISSUE_TITLE**: Issue title/summary
-- **ISSUE_DESCRIPTION**: Full issue description
+Once you have the issue reference:
+1. You MUST run `/issue-dev:issue-work <url-or-id>` to:
+   - Detect provider (Linear, JIRA, or ask if unclear)
+   - Fetch issue details (title, description, labels)
+   - Move issue to In Progress
 
-## Step 2: Infer Task Type
+### Step 2: Infer Task Type
 
 You MUST analyze the issue title and description for keywords:
 
-**Frontend indicators**:
-- UI, frontend, component, design, button, form, page, screen
-- CSS, styling, layout, responsive, animation
-- React, Vue, Svelte, Next.js, Nuxt
+**Frontend indicators**: UI, frontend, component, design, button, form, page, screen, modal, dialog, layout, style, CSS, animation, responsive
+**Backend indicators**: API, endpoint, backend, database, service, GraphQL, REST, migration, schema, query, integration, server
+**Design/Exploration indicators**: brainstorm, explore, design, architecture, plan, investigate, research, spike
 
-**Backend indicators**:
-- API, endpoint, backend, database, service
-- GraphQL, REST, integration, migration
-- Server, authentication, authorization
+You MUST determine task type:
+- **Frontend**: Primarily FE keywords
+- **Backend**: Primarily BE keywords
+- **Full-stack**: Both FE and BE keywords present
+- **Design/Exploration**: Design keywords or unclear implementation path
 
-**Design/Exploration indicators**:
-- Brainstorm, explore, design, architecture, plan
-- Research, investigate, prototype, RFC
-
-**Classification**:
-- If ONLY frontend keywords → **Frontend task**
-- If ONLY backend keywords → **Backend task**
-- If BOTH frontend AND backend keywords → **Full-stack task**
-- If design/exploration keywords → **Design/Exploration task**
-- If unclear → You MUST ask user
-
-## Step 3: Determine Entry Point Skill
+### Step 3: Determine Entry Point
 
 Based on task type:
-- **Design/Exploration task** → Entry point MUST be `/superpowers:brainstorm`
-- **Implementation task** (FE, BE, or Full-stack) → Entry point MUST be `/superpowers:write-plan`
+- If design/exploration task → you MUST use `/superpowers:brainstorm`
+- If implementation task → you MUST use `/superpowers:write-plan`
 
-## Step 4: Gather Additional Context
+### Step 4: Gather Additional Context
 
-You MUST use AskUserQuestion with these questions:
+You MUST use AskUserQuestion to confirm and gather info:
+1. "This looks like a [FE/BE/Full-stack] task. Correct?" (with options: Frontend, Backend, Full-stack, Design/Exploration)
+2. "Any additional criteria or success conditions?" (open text)
+3. "Any negative criteria (what NOT to do)?" (open text)
+4. "Any reference links (PRs, docs, APIs)?" (open text)
 
-**Question 1** - Confirm task type:
-- Header: "Task type"
-- Question: "This looks like a [detected type] task. Is this correct?"
-- Options:
-  - "[Detected type] (Recommended)" with description of what was detected
-  - "Frontend" - UI, components, styling
-  - "Backend" - API, database, services
-  - "Full-stack" - Both frontend and backend
-  - "Design/Exploration" - Research, planning, architecture
+### Step 5: Generate Workflow Prompt
 
-**Question 2** - Additional context:
-- Header: "Context"
-- Question: "Any additional criteria or context for this task?"
-- Options:
-  - "No additional context"
-  - Other (free text)
-
-**Question 3** - Reference links:
-- Header: "References"
-- Question: "Any reference links (PRs, docs, APIs, designs)?"
-- Options:
-  - "No references"
-  - Other (free text)
-
-## Step 5: Extract or Ask for Criteria
-
-You SHOULD try to parse success criteria from the issue description (look for sections like "Acceptance Criteria", "Definition of Done", "Requirements", bullet points).
-
-If criteria found in issue:
-- You MUST present them to user for confirmation
-- You SHOULD ask if any modifications needed
-
-If criteria NOT found:
-- You MUST ask: "What are the success criteria for this task?"
-
-You MUST additionally ask:
-- "Any negative criteria (what NOT to do)?"
-
-## Step 6: Generate Workflow Prompt
-
-You MUST generate the complete workflow using this template:
-
----
-
-### Template Start
+You MUST output the complete workflow prompt using this template:
 
 ```
-[ENTRY_SKILL] implement [[ISSUE_ID]](ISSUE_URL)
+[ENTRY_POINT] implement [[ISSUE_ID]](ISSUE_URL)
 
 ## Task: ISSUE_TITLE
 
@@ -126,69 +67,89 @@ ISSUE_DESCRIPTION
 ## Planning Protocol
 > You MUST iterate through the plan at least 3 times
 > Each iteration: explore codebase → refine approach → validate assumptions
-> Final iteration: You MUST run /superpowers:code-review to validate the plan
+> Final iteration: you MUST run /superpowers:code-review to validate the plan
 > You MUST NOT proceed to implementation until plan is solid
 
 ## Criteria for Success
-[SUCCESS_CRITERIA - from issue or user input]
+[From issue description or user input]
 
 ## Negative Criteria
-[NEGATIVE_CRITERIA - from user input, or "None specified" if not provided]
+[From user input - what you MUST NOT do]
 
 ## Workflow
 > You MUST pull latest main before starting
-> You SHOULD clear the context before starting implementation
+> You MUST clear the context before starting implementation
 > You MUST create a separate worktree and branch to work in
 
-[IF FRONTEND or FULL-STACK:]
-> You MUST use frontend-design skill and playwright, and project skills for FE
-> You MUST verify the UI and everything
+[If frontend task:]
+> You MUST use frontend-design skill and playwright for FE
+> You MUST verify the UI thoroughly
 > You SHOULD verify in storybook if available
 
-[IF BACKEND or FULL-STACK:]
+[If backend task:]
 > You MUST verify the BE changes through testing the endpoint with sample data
 > You SHOULD check existing tests for reference
 
-> You SHOULD use ralph-loop (ralph-loop:help) if the task is complex so we can improve the code iteratively
+> You SHOULD use ralph-loop (ralph-loop:help) if the task is complex
 > You SHOULD use find-skills to discover relevant skills
-> You SHOULD use necessary skills and MCPs to achieve success
 > You MUST check project CLAUDE.md and .claude/skills for project-specific patterns
 
-[IF TASK INVOLVES DATABASE CHANGES:]
-## Database Changes
-> If this task involves schema changes, You MUST ask how migrations should be handled
+## Database Changes (if applicable)
+> If this task involves schema changes, you MUST ask how migrations should be handled
 > You MUST NOT assume migration strategy - confirm with user
 
 ## Verification & Quality
-> You MUST do a /superpowers:code-review and fix potential issues and improvements
-> You MUST typecheck, lint and build
+> You MUST run /superpowers:code-review and fix all identified issues
+> You MUST run typecheck, lint and build
 > You MUST verify changes match acceptance criteria
 
 ## Completion
-> You MUST commit, push as a PR remotely
-> You MUST remove worktree
+> You MUST commit and push as a PR remotely
+> You MUST remove worktree after PR is created
 > You MUST run /issue-dev:issue-done when complete
 
-[IF ADDITIONAL_CONTEXT provided:]
-## Additional Context
-ADDITIONAL_CONTEXT
-
-[IF REFERENCES provided:]
+[If reference links provided:]
 ## References
-REFERENCES
+[User-provided reference links]
+
+[If additional context provided:]
+## Additional Context
+[User-provided context]
 ```
 
-### Template End
+### Step 6: Execute or Present
 
----
+After generating the prompt:
+1. You MUST present the generated workflow to the user
+2. You MUST ask: "Ready to execute this workflow?"
+3. If yes, you MUST execute the entry point command with the generated prompt
 
-## Output
+## Variable Substitutions
 
-After generating the workflow:
+- `[ENTRY_POINT]` → `/superpowers:write-plan` or `/superpowers:brainstorm`
+- `[ISSUE_ID]` → Extracted from URL (e.g., CSX-1234, DJT-64)
+- `[ISSUE_URL]` → Original issue URL
+- `[ISSUE_TITLE]` → From issue API response
+- `[ISSUE_DESCRIPTION]` → From issue API response
 
-1. You MUST output the complete workflow prompt in a code block
-2. You MUST ask the user: "Ready to start? I can copy this workflow and begin, or you can modify it first."
+## Examples
 
-If user confirms:
-- You MUST copy the workflow prompt
-- You MUST begin execution by invoking the entry skill with the workflow
+**With Linear URL:**
+```
+/ifd https://linear.app/my-team/issue/PROJ-123/implement-feature
+```
+
+**With JIRA URL:**
+```
+/ifd https://company.atlassian.net/browse/TEAM-456
+```
+
+**With just issue ID:**
+```
+/ifd PROJ-123
+```
+
+**Interactive (no argument):**
+```
+/ifd
+```

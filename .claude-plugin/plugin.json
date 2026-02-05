@@ -1,0 +1,12 @@
+{
+  "name": "ifd",
+  "version": "1.0.0",
+  "description": "Issue First Development - Generate implementation workflows from issue tracker URLs",
+  "author": {
+    "name": "Thomas Indrias",
+    "url": "https://github.com/thomasindrias"
+  },
+  "repository": "https://github.com/thomasindrias/ifd",
+  "license": "MIT",
+  "keywords": ["workflow", "issues", "jira", "linear", "development"]
+}

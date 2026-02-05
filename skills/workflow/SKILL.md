@@ -1,144 +1,158 @@
 ---
 name: workflow
-description: Internal skill documenting the Issue First Development workflow philosophy, edge case handling, and template customization. Used by the /ifd command to generate structured implementation workflows.
+description: Use when working on issue-driven development tasks to understand the IFD workflow philosophy, planning protocol, and quality standards. Invoke when users ask about "ifd workflow", "planning iterations", "issue first development", or need guidance on the structured development approach.
 ---
 
 # Issue First Development Workflow
 
-This skill documents the philosophy and patterns behind the ifd workflow generation.
+This skill documents the philosophy and standards behind Issue First Development (IFD) - a structured approach to implementing features from issue tracker tickets.
+
+## RFC 2119 Keywords
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119.
 
 ## Core Philosophy
 
-Issue First Development (ifd) is built on these principles:
+**Issue First Development** means:
+1. You MUST always start with a tracked issue (JIRA, Linear, etc.)
+2. You MUST understand requirements fully before writing code
+3. You MUST plan thoroughly with multiple iterations
+4. You MUST validate the plan before implementation
+5. You MUST follow a consistent workflow for quality and traceability
 
-1. **Issues drive work**: Every implementation MUST start from a tracked issue
-2. **Planning before coding**: You MUST complete multiple planning iterations before coding
-3. **Isolation**: Work MUST happen in separate worktrees to avoid conflicts
-4. **Verification**: You MUST perform code review and quality checks before completion
-5. **Closure**: Issues MUST be updated to reflect completion
+## Planning Protocol
 
-## Workflow Stages
+Every implementation task MUST follow this planning protocol:
 
-### 1. Issue Acquisition
+### Three-Pass Planning
 
-The workflow MUST begin by fetching issue details via the `issue-dev` plugin. This:
-- Normalizes provider differences (Linear, JIRA, etc.)
-- Moves the issue to "In Progress"
-- Extracts structured data (title, description, labels)
+1. **First Pass: Exploration**
+   - You MUST read the issue thoroughly
+   - You MUST explore the codebase to understand context
+   - You MUST identify affected files and components
+   - You SHOULD note dependencies and potential impacts
 
-### 2. Task Classification
+2. **Second Pass: Refinement**
+   - You MUST draft an implementation approach
+   - You MUST identify gaps in understanding
+   - You SHOULD research patterns used in the codebase
+   - You MUST refine the approach based on findings
 
-Tasks MUST be classified to determine the appropriate workflow:
+3. **Third Pass: Validation**
+   - You MUST run `/superpowers:code-review` on the plan
+   - You MUST address any concerns raised
+   - You MUST finalize the implementation strategy
+   - You MUST NOT proceed until plan is solid
 
-| Type | Entry Skill | Key Indicators |
-|------|------------|----------------|
-| Frontend | write-plan | UI, component, styling, React/Vue |
-| Backend | write-plan | API, database, service, GraphQL |
-| Full-stack | write-plan | Both FE and BE indicators |
-| Design/Exploration | brainstorm | Research, prototype, RFC |
+### Why Three Passes?
 
-### 3. Context Gathering
+- First pass often reveals unknown unknowns
+- Second pass connects the dots
+- Third pass catches issues before they become bugs
+- This prevents the "I didn't realize..." problem mid-implementation
 
-Before generating the workflow, you MUST gather:
-- **Task type confirmation**: User validates the detected type
-- **Additional context**: Requirements not in the issue
-- **References**: Related PRs, docs, APIs, designs
-- **Success criteria**: What "done" looks like
-- **Negative criteria**: What to avoid
+## Workflow Standards
 
-### 4. Workflow Generation
+### Pre-Implementation
 
-The generated workflow MUST include:
-- Entry skill invocation with issue link
-- Planning protocol (3+ iterations)
-- Task-type-specific guidance
-- Verification requirements
-- Completion steps
+You MUST complete these steps before writing code:
 
-## Edge Cases
+```
+> You MUST pull latest main before starting
+> You MUST clear the context before starting implementation
+> You MUST create a separate worktree and branch to work in
+```
 
-### Unclear Task Type
+**Worktree isolation** prevents:
+- Conflicts with ongoing work
+- Accidental commits to wrong branch
+- Context pollution between tasks
 
-When keywords do not clearly indicate task type:
-1. You MUST present the ambiguity to the user
-2. You MUST ask them to classify the task
-3. You SHOULD offer "Full-stack" as a safe default
+### Task Type Guidance
 
-### Missing Criteria
+**Frontend Tasks:**
+- You MUST use frontend-design skill for UI work
+- You MUST use playwright for verification
+- You SHOULD check storybook if available
+- You SHOULD verify responsive behavior
 
-When the issue lacks clear acceptance criteria:
-1. You MUST check for sections like "Acceptance Criteria", "Requirements"
-2. You SHOULD look for bullet points that might be criteria
-3. If nothing found, you MUST explicitly ask the user
-4. You MUST document that criteria were user-provided
+**Backend Tasks:**
+- You MUST verify via endpoint testing
+- You SHOULD check existing tests for patterns
+- You SHOULD consider API contract implications
+- You MUST validate error handling
+
+### Quality Gates
+
+Before completion, you MUST:
+1. Run `/superpowers:code-review`
+2. Fix all identified issues
+3. Run typecheck, lint, and build
+4. Verify changes match acceptance criteria
+
+You MUST NOT mark a task as complete if any quality gate fails.
 
 ### Database Changes
 
-When the task involves schema changes:
-1. You MUST add the "Database Changes" section to the workflow
-2. You MUST NOT assume migration strategy
-3. Workflow MUST prompt user about migration handling
+If the task involves schema changes:
+- You MUST NOT assume migration strategy
+- You MUST ask the user how to handle migrations
+- You SHOULD consider: local-only, staging, production
+- You SHOULD document migration steps
 
-### Complex Tasks
+## Criteria Framework
 
-For tasks that seem complex:
-1. You SHOULD include ralph-loop recommendation
-2. You SHOULD suggest using find-skills for discovery
-3. You SHOULD emphasize iterative improvement
+Every task SHOULD have:
 
-## Template Customization
+### Positive Criteria (What Success Looks Like)
+- Specific, measurable outcomes
+- User-facing behavior changes
+- Technical requirements met
+- Tests passing
 
-The workflow template MUST adapt based on:
+### Negative Criteria (What to Avoid)
+- Anti-patterns for this codebase
+- Breaking changes to avoid
+- Performance regressions
+- Security concerns
 
-### Task Type Sections
+## Completion Protocol
 
-**Frontend tasks MUST include:**
-- frontend-design skill usage
-- Playwright verification
-- Storybook verification if available
+You MUST complete these steps:
 
-**Backend tasks MUST include:**
-- Endpoint testing with sample data
-- Existing test reference
+```
+> You MUST commit and push as a PR remotely
+> You MUST remove worktree after PR is created
+> You MUST run /issue-dev:issue-done when complete
+```
 
-**Full-stack tasks MUST include:**
-- Both frontend and backend sections
+This ensures:
+- Work is saved and shared
+- Clean workspace after completion
+- Issue tracker stays in sync
 
-### Optional Sections
+## When to Use This Workflow
 
-These sections SHOULD only be included when relevant:
-- **Database Changes**: Only if task mentions schema/migration
-- **Additional Context**: Only if user provided context
-- **References**: Only if user provided links
+You SHOULD use this workflow for:
+- Any feature implementation from an issue
+- Bug fixes with tracked tickets
+- Refactoring tasks
+- Technical debt cleanup
 
-## Integration Points
+## When NOT to Use This Workflow
 
-### issue-dev Plugin
+You MAY skip this workflow for:
+- Quick hotfixes (but you MUST still commit properly)
+- Exploration without implementation intent
+- Documentation-only changes
+- Trivial typo fixes
 
-ifd MUST delegate all issue operations to issue-dev:
-- `/issue-dev:issue-work` - Fetch and start work
-- `/issue-dev:issue-done` - Complete and close
+## Integration with Other Skills
 
-ifd MUST NOT interact with issue tracker MCPs directly.
-
-### superpowers Plugin
-
-ifd MUST use superpowers for workflow execution:
-- `/superpowers:brainstorm` - Design/exploration entry
-- `/superpowers:write-plan` - Implementation entry
-- `/superpowers:code-review` - Verification step
-
-### Project Skills
-
-The generated workflow MUST reference:
-- Project CLAUDE.md for conventions
-- .claude/skills for project-specific patterns
-- find-skills for capability discovery
-
-## Best Practices
-
-1. **You MUST NOT skip planning**: Even "simple" tasks benefit from iteration
-2. **You MUST use worktrees**: Isolation prevents conflicts and enables parallel work
-3. **You MUST verify before completion**: Code review catches issues early
-4. **You MUST update issues**: Keep the tracker in sync with reality
-5. **You MUST pull latest main**: Start from a clean, up-to-date base
+IFD works best with:
+- `superpowers:write-plan` - For planning iterations
+- `superpowers:code-review` - For plan validation
+- `superpowers:brainstorm` - For design exploration
+- `issue-dev` - For issue status management
+- `ralph-loop` - For complex iterative work
+- `frontend-design` - For UI implementation
