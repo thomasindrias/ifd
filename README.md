@@ -1,4 +1,19 @@
-# ifd - Issue First Development
+> [!WARNING]
+> **This repository has been deprecated.**
+>
+> IFD has been integrated into the [issue-dev](https://github.com/thomasindrias/issue-dev) plugin as `/issue-plan`.
+>
+> **To install:**
+> ```bash
+> claude plugin marketplace add thomasindrias/issue-dev
+> claude plugin install issue-dev@issue-dev
+> ```
+>
+> The `/issue-plan` command provides the same functionality as `/ifd`.
+
+---
+
+# ifd - Issue First Development (Deprecated)
 
 A Claude Code plugin that generates structured implementation workflows from issue tracker URLs.
 
