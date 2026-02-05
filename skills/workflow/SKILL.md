@@ -11,24 +11,24 @@ This skill documents the philosophy and patterns behind the ifd workflow generat
 
 Issue First Development (ifd) is built on these principles:
 
-1. **Issues drive work**: Every implementation starts from a tracked issue
-2. **Planning before coding**: Multiple planning iterations prevent wasted effort
-3. **Isolation**: Work happens in separate worktrees to avoid conflicts
-4. **Verification**: Code review and quality checks before completion
-5. **Closure**: Issues are updated to reflect completion
+1. **Issues drive work**: Every implementation MUST start from a tracked issue
+2. **Planning before coding**: You MUST complete multiple planning iterations before coding
+3. **Isolation**: Work MUST happen in separate worktrees to avoid conflicts
+4. **Verification**: You MUST perform code review and quality checks before completion
+5. **Closure**: Issues MUST be updated to reflect completion
 
 ## Workflow Stages
 
 ### 1. Issue Acquisition
 
-The workflow begins by fetching issue details via the `issue-dev` plugin. This:
+The workflow MUST begin by fetching issue details via the `issue-dev` plugin. This:
 - Normalizes provider differences (Linear, JIRA, etc.)
 - Moves the issue to "In Progress"
 - Extracts structured data (title, description, labels)
 
 ### 2. Task Classification
 
-Tasks are classified to determine the appropriate workflow:
+Tasks MUST be classified to determine the appropriate workflow:
 
 | Type | Entry Skill | Key Indicators |
 |------|------------|----------------|
@@ -39,7 +39,7 @@ Tasks are classified to determine the appropriate workflow:
 
 ### 3. Context Gathering
 
-Before generating the workflow, gather:
+Before generating the workflow, you MUST gather:
 - **Task type confirmation**: User validates the detected type
 - **Additional context**: Requirements not in the issue
 - **References**: Related PRs, docs, APIs, designs
@@ -48,7 +48,7 @@ Before generating the workflow, gather:
 
 ### 4. Workflow Generation
 
-The generated workflow includes:
+The generated workflow MUST include:
 - Entry skill invocation with issue link
 - Planning protocol (3+ iterations)
 - Task-type-specific guidance
@@ -59,54 +59,54 @@ The generated workflow includes:
 
 ### Unclear Task Type
 
-When keywords don't clearly indicate task type:
-1. Present the ambiguity to the user
-2. Ask them to classify the task
-3. Offer "Full-stack" as a safe default
+When keywords do not clearly indicate task type:
+1. You MUST present the ambiguity to the user
+2. You MUST ask them to classify the task
+3. You SHOULD offer "Full-stack" as a safe default
 
 ### Missing Criteria
 
 When the issue lacks clear acceptance criteria:
-1. Check for sections like "Acceptance Criteria", "Requirements"
-2. Look for bullet points that might be criteria
-3. If nothing found, explicitly ask the user
-4. Document that criteria were user-provided
+1. You MUST check for sections like "Acceptance Criteria", "Requirements"
+2. You SHOULD look for bullet points that might be criteria
+3. If nothing found, you MUST explicitly ask the user
+4. You MUST document that criteria were user-provided
 
 ### Database Changes
 
 When the task involves schema changes:
-1. Add the "Database Changes" section to the workflow
-2. Do NOT assume migration strategy
-3. Workflow should prompt user about migration handling
+1. You MUST add the "Database Changes" section to the workflow
+2. You MUST NOT assume migration strategy
+3. Workflow MUST prompt user about migration handling
 
 ### Complex Tasks
 
 For tasks that seem complex:
-1. Include ralph-loop recommendation
-2. Suggest using find-skills for discovery
-3. Emphasize iterative improvement
+1. You SHOULD include ralph-loop recommendation
+2. You SHOULD suggest using find-skills for discovery
+3. You SHOULD emphasize iterative improvement
 
 ## Template Customization
 
-The workflow template adapts based on:
+The workflow template MUST adapt based on:
 
 ### Task Type Sections
 
-**Frontend tasks include:**
+**Frontend tasks MUST include:**
 - frontend-design skill usage
 - Playwright verification
 - Storybook verification if available
 
-**Backend tasks include:**
+**Backend tasks MUST include:**
 - Endpoint testing with sample data
 - Existing test reference
 
-**Full-stack tasks include:**
+**Full-stack tasks MUST include:**
 - Both frontend and backend sections
 
 ### Optional Sections
 
-These sections are only included when relevant:
+These sections SHOULD only be included when relevant:
 - **Database Changes**: Only if task mentions schema/migration
 - **Additional Context**: Only if user provided context
 - **References**: Only if user provided links
@@ -115,30 +115,30 @@ These sections are only included when relevant:
 
 ### issue-dev Plugin
 
-ifd delegates all issue operations to issue-dev:
+ifd MUST delegate all issue operations to issue-dev:
 - `/issue-dev:issue-work` - Fetch and start work
 - `/issue-dev:issue-done` - Complete and close
 
-ifd never interacts with issue tracker MCPs directly.
+ifd MUST NOT interact with issue tracker MCPs directly.
 
 ### superpowers Plugin
 
-ifd uses superpowers for workflow execution:
+ifd MUST use superpowers for workflow execution:
 - `/superpowers:brainstorm` - Design/exploration entry
 - `/superpowers:write-plan` - Implementation entry
 - `/superpowers:code-review` - Verification step
 
 ### Project Skills
 
-The generated workflow references:
+The generated workflow MUST reference:
 - Project CLAUDE.md for conventions
 - .claude/skills for project-specific patterns
 - find-skills for capability discovery
 
 ## Best Practices
 
-1. **Don't skip planning**: Even "simple" tasks benefit from iteration
-2. **Use worktrees**: Isolation prevents conflicts and enables parallel work
-3. **Verify before completion**: Code review catches issues early
-4. **Update issues**: Keep the tracker in sync with reality
-5. **Pull latest main**: Start from a clean, up-to-date base
+1. **You MUST NOT skip planning**: Even "simple" tasks benefit from iteration
+2. **You MUST use worktrees**: Isolation prevents conflicts and enables parallel work
+3. **You MUST verify before completion**: Code review catches issues early
+4. **You MUST update issues**: Keep the tracker in sync with reality
+5. **You MUST pull latest main**: Start from a clean, up-to-date base

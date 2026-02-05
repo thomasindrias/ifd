@@ -15,21 +15,21 @@ Generate a structured implementation workflow from an issue tracker URL or ID.
 
 ## Input Handling
 
-1. **If no argument provided**: Use AskUserQuestion to get issue URL or ID:
+1. **If no argument provided**: You MUST use AskUserQuestion to get issue URL or ID:
    - Header: "Issue"
    - Question: "What issue would you like to work on?"
    - Options: Allow free text input
 
-2. **If argument provided**: Use the provided URL or ID directly
+2. **If argument provided**: You MUST use the provided URL or ID directly
 
 ## Step 1: Fetch Issue Details
 
-Run `/issue-dev:issue-work <url-or-id>` to:
+You MUST run `/issue-dev:issue-work <url-or-id>` to:
 - Detect provider (Linear, JIRA, or ask if unclear)
 - Fetch issue details (title, description, labels)
 - Move issue to In Progress state
 
-Extract from the issue:
+You MUST extract from the issue:
 - **ISSUE_ID**: The issue identifier (e.g., PROJ-123)
 - **ISSUE_URL**: Full URL to the issue
 - **ISSUE_TITLE**: Issue title/summary
@@ -37,7 +37,7 @@ Extract from the issue:
 
 ## Step 2: Infer Task Type
 
-Analyze the issue title and description for keywords:
+You MUST analyze the issue title and description for keywords:
 
 **Frontend indicators**:
 - UI, frontend, component, design, button, form, page, screen
@@ -58,17 +58,17 @@ Analyze the issue title and description for keywords:
 - If ONLY backend keywords → **Backend task**
 - If BOTH frontend AND backend keywords → **Full-stack task**
 - If design/exploration keywords → **Design/Exploration task**
-- If unclear → Ask user
+- If unclear → You MUST ask user
 
 ## Step 3: Determine Entry Point Skill
 
 Based on task type:
-- **Design/Exploration task** → Entry point: `/superpowers:brainstorm`
-- **Implementation task** (FE, BE, or Full-stack) → Entry point: `/superpowers:write-plan`
+- **Design/Exploration task** → Entry point MUST be `/superpowers:brainstorm`
+- **Implementation task** (FE, BE, or Full-stack) → Entry point MUST be `/superpowers:write-plan`
 
 ## Step 4: Gather Additional Context
 
-Use AskUserQuestion with these questions:
+You MUST use AskUserQuestion with these questions:
 
 **Question 1** - Confirm task type:
 - Header: "Task type"
@@ -96,21 +96,21 @@ Use AskUserQuestion with these questions:
 
 ## Step 5: Extract or Ask for Criteria
 
-Try to parse success criteria from the issue description (look for sections like "Acceptance Criteria", "Definition of Done", "Requirements", bullet points).
+You SHOULD try to parse success criteria from the issue description (look for sections like "Acceptance Criteria", "Definition of Done", "Requirements", bullet points).
 
 If criteria found in issue:
-- Present them to user for confirmation
-- Ask if any modifications needed
+- You MUST present them to user for confirmation
+- You SHOULD ask if any modifications needed
 
 If criteria NOT found:
-- Ask: "What are the success criteria for this task?"
+- You MUST ask: "What are the success criteria for this task?"
 
-Additionally ask:
+You MUST additionally ask:
 - "Any negative criteria (what NOT to do)?"
 
 ## Step 6: Generate Workflow Prompt
 
-Generate the complete workflow using this template:
+You MUST generate the complete workflow using this template:
 
 ---
 
@@ -124,10 +124,10 @@ Generate the complete workflow using this template:
 ISSUE_DESCRIPTION
 
 ## Planning Protocol
-> Iterate through the plan at least 3 times
+> You MUST iterate through the plan at least 3 times
 > Each iteration: explore codebase → refine approach → validate assumptions
-> Final iteration: run /superpowers:code-review to validate the plan
-> Only proceed to implementation after plan is solid
+> Final iteration: You MUST run /superpowers:code-review to validate the plan
+> You MUST NOT proceed to implementation until plan is solid
 
 ## Criteria for Success
 [SUCCESS_CRITERIA - from issue or user input]
@@ -136,38 +136,38 @@ ISSUE_DESCRIPTION
 [NEGATIVE_CRITERIA - from user input, or "None specified" if not provided]
 
 ## Workflow
-> make sure to pull latest main before starting
-> clear the context before starting implementation
-> create a separate worktree and branch to work in (IMPORTANT)
+> You MUST pull latest main before starting
+> You SHOULD clear the context before starting implementation
+> You MUST create a separate worktree and branch to work in
 
 [IF FRONTEND or FULL-STACK:]
-> use frontend-design skill and playwright, and project skills for FE (IMPORTANT)
-> verify the UI and everything
-> verify in storybook if available
+> You MUST use frontend-design skill and playwright, and project skills for FE
+> You MUST verify the UI and everything
+> You SHOULD verify in storybook if available
 
 [IF BACKEND or FULL-STACK:]
-> verify the BE changes through testing the endpoint with sample data
-> check existing tests for reference
+> You MUST verify the BE changes through testing the endpoint with sample data
+> You SHOULD check existing tests for reference
 
-> use ralph-loop (ralph-loop:help) if the task is complex so we can improve the code iteratively
-> use find-skills to discover relevant skills
-> use necessary skills and MCPs to achieve success
-> check project CLAUDE.md and .claude/skills for project-specific patterns
+> You SHOULD use ralph-loop (ralph-loop:help) if the task is complex so we can improve the code iteratively
+> You SHOULD use find-skills to discover relevant skills
+> You SHOULD use necessary skills and MCPs to achieve success
+> You MUST check project CLAUDE.md and .claude/skills for project-specific patterns
 
 [IF TASK INVOLVES DATABASE CHANGES:]
 ## Database Changes
-> If this task involves schema changes, ask how migrations should be handled
-> Do not assume migration strategy - confirm with user
+> If this task involves schema changes, You MUST ask how migrations should be handled
+> You MUST NOT assume migration strategy - confirm with user
 
 ## Verification & Quality
-> do a /superpowers:code-review and you MUST fix potential issues and improvements
-> typecheck, lint and build
-> verify changes match acceptance criteria
+> You MUST do a /superpowers:code-review and fix potential issues and improvements
+> You MUST typecheck, lint and build
+> You MUST verify changes match acceptance criteria
 
 ## Completion
-> commit, push as a PR remotely
-> remove worktree
-> run /issue-dev:issue-done when complete
+> You MUST commit, push as a PR remotely
+> You MUST remove worktree
+> You MUST run /issue-dev:issue-done when complete
 
 [IF ADDITIONAL_CONTEXT provided:]
 ## Additional Context
@@ -186,9 +186,9 @@ REFERENCES
 
 After generating the workflow:
 
-1. Output the complete workflow prompt in a code block
-2. Ask the user: "Ready to start? I can copy this workflow and begin, or you can modify it first."
+1. You MUST output the complete workflow prompt in a code block
+2. You MUST ask the user: "Ready to start? I can copy this workflow and begin, or you can modify it first."
 
 If user confirms:
-- Copy the workflow prompt
-- Begin execution by invoking the entry skill with the workflow
+- You MUST copy the workflow prompt
+- You MUST begin execution by invoking the entry skill with the workflow
