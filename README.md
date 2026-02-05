@@ -67,12 +67,23 @@ The plugin generates a prompt that includes:
 |-------|-------------|
 | `ifd:workflow` | Explains the IFD philosophy and workflow standards |
 
-## Dependencies
+## Prerequisites
 
-This plugin requires:
+**Install these plugins before using ifd:**
 
-- [superpowers](https://github.com/claude-plugins-official/superpowers) - For `/superpowers:write-plan` and `/superpowers:code-review`
-- [issue-dev](https://github.com/thomasindrias/issue-dev) - For issue tracking integration
+```bash
+# Required: Planning and code review capabilities
+claude plugin install superpowers@claude-plugins-official
+
+# Required: Issue tracking integration (Linear, JIRA)
+claude plugin marketplace add thomasindrias/issue-dev
+claude plugin install issue-dev
+```
+
+| Plugin | Purpose | Required |
+|--------|---------|----------|
+| [superpowers](https://github.com/anthropics/claude-plugins-official) | `/superpowers:write-plan`, `/superpowers:brainstorm`, `/superpowers:code-review` | Yes |
+| [issue-dev](https://github.com/thomasindrias/issue-dev) | Issue tracking integration (Linear, JIRA) | Yes |
 
 ## Philosophy
 

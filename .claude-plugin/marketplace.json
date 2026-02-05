@@ -5,12 +5,12 @@
   },
   "metadata": {
     "description": "Issue First Development - Generate implementation workflows from issue tracker URLs",
-    "version": "1.2.0"
+    "version": "1.2.1"
   },
   "plugins": [
     {
       "name": "ifd",
-      "description": "Generate structured implementation workflows from issue tracker URLs. Integrates with Linear, JIRA, and other providers via issue-dev plugin.",
+      "description": "Generate structured implementation workflows from issue tracker URLs. Requires: superpowers plugin (for write-plan, code-review) and issue-dev plugin (for Linear/JIRA integration).",
       "source": "./.claude-plugin",
       "strict": false
     }

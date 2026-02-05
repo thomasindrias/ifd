@@ -1,6 +1,6 @@
 {
   "name": "ifd",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Issue First Development - Generate implementation workflows from issue tracker URLs",
   "author": {
     "name": "Thomas Indrias",
