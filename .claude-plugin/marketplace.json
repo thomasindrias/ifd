@@ -1,0 +1,20 @@
+{
+  "category": "workflow",
+  "tags": ["workflow", "issues", "jira", "linear", "planning", "development"],
+  "featured": false,
+  "screenshots": [],
+  "dependencies": [
+    {
+      "name": "superpowers",
+      "repository": "claude-plugins-official/superpowers",
+      "required": true,
+      "reason": "Required for /superpowers:write-plan, /superpowers:brainstorm, and /superpowers:code-review"
+    },
+    {
+      "name": "issue-dev",
+      "repository": "thomasindrias/issue-dev",
+      "required": true,
+      "reason": "Required for issue tracking integration (Linear, JIRA)"
+    }
+  ]
+}

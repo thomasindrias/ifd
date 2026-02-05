@@ -2,6 +2,12 @@
 name: ifd
 description: Generate implementation workflow from any issue tracker URL
 argument-hint: <issue-url-or-id>
+allowed-tools:
+  - AskUserQuestion
+  - Skill
+  - Read
+  - Grep
+  - Glob
 ---
 
 # Issue First Development
@@ -29,9 +35,19 @@ Once you have the issue reference:
 
 You MUST analyze the issue title and description for keywords:
 
-**Frontend indicators**: UI, frontend, component, design, button, form, page, screen, modal, dialog, layout, style, CSS, animation, responsive
-**Backend indicators**: API, endpoint, backend, database, service, GraphQL, REST, migration, schema, query, integration, server
-**Design/Exploration indicators**: brainstorm, explore, design, architecture, plan, investigate, research, spike
+**Frontend indicators**:
+- UI elements: UI, frontend, component, button, form, page, screen, modal, dialog, layout
+- Styling: CSS, styling, style, responsive, animation, theme
+- Frameworks: React, Vue, Svelte, Next.js, Nuxt, Angular
+
+**Backend indicators**:
+- API: API, endpoint, backend, GraphQL, REST, webhook
+- Data: database, schema, migration, query, ORM
+- Services: service, integration, server, authentication, authorization
+
+**Design/Exploration indicators**:
+- Research: brainstorm, explore, investigate, research, spike, RFC
+- Architecture: design, architecture, plan, prototype, POC
 
 You MUST determine task type:
 - **Frontend**: Primarily FE keywords
@@ -48,10 +64,31 @@ Based on task type:
 ### Step 4: Gather Additional Context
 
 You MUST use AskUserQuestion to confirm and gather info:
-1. "This looks like a [FE/BE/Full-stack] task. Correct?" (with options: Frontend, Backend, Full-stack, Design/Exploration)
-2. "Any additional criteria or success conditions?" (open text)
-3. "Any negative criteria (what NOT to do)?" (open text)
-4. "Any reference links (PRs, docs, APIs)?" (open text)
+
+**Question 1 - Task Type Confirmation:**
+- Header: "Task type"
+- Question: "This looks like a [detected type] task. Is this correct?"
+- Options:
+  - "[Detected type] (Recommended)" - Based on keyword analysis
+  - "Frontend" - UI, components, styling
+  - "Backend" - API, database, services
+  - "Full-stack" - Both frontend and backend
+  - "Design/Exploration" - Research, planning, architecture
+
+**Question 2 - Success Criteria:**
+- Header: "Criteria"
+- Question: "Any additional success criteria or context?"
+- Options: Allow free text (user can add criteria beyond what's in the issue)
+
+**Question 3 - Negative Criteria:**
+- Header: "Avoid"
+- Question: "Any negative criteria (what NOT to do)?"
+- Options: Allow free text (anti-patterns, constraints, things to avoid)
+
+**Question 4 - References:**
+- Header: "References"
+- Question: "Any reference links (PRs, docs, APIs, designs)?"
+- Options: Allow free text (URLs to related resources)
 
 ### Step 5: Generate Workflow Prompt
 
